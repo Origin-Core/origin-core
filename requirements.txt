@@ -1,0 +1,7 @@
+customtkinter==5.2.2
+psutil==5.9.8
+pywin32==306; sys_platform == 'win32'
+pythonnet==3.0.3; sys_platform == 'win32'
+nvidia-ml-py==12.560.30
+pyinstaller==6.10.0
+Pillow==10.4.0

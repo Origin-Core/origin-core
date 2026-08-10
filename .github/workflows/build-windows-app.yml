@@ -1,0 +1,41 @@
+name: Build Windows App
+
+# Builds the Origin-Core desktop app into a Windows .exe installer using
+# electron-builder. Runs on GitHub's own runners, which have internet
+# access, so this is where npm packages actually get downloaded and the
+# exe gets compiled — not on your own machine.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'windows-app/**'
+      - '.github/workflows/build-windows-app.yml'
+  workflow_dispatch: {}   # lets you trigger a build manually from the Actions tab
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: windows-app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Windows installer (.exe)
+        run: npm run dist
+
+      - name: Upload built .exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: origin-core-windows-installer
+          path: windows-app/dist/*.exe

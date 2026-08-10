@@ -1,9 +1,9 @@
 name: Build Windows App
 
 # Builds the Origin-Core desktop app into a Windows .exe installer using
-# electron-builder. Runs on GitHub's own runners, which have internet
-# access, so this is where npm packages actually get downloaded and the
-# exe gets compiled — not on your own machine.
+# electron-builder on GitHub's own runners (which have internet access),
+# then publishes the exe as a GitHub Release so it shows up under
+# github.com/<owner>/<repo>/releases — not just as a workflow Artifact.
 
 on:
   push:
@@ -12,6 +12,9 @@ on:
       - 'windows-app/**'
       - '.github/workflows/build-windows-app.yml'
   workflow_dispatch: {}   # lets you trigger a build manually from the Actions tab
+
+permissions:
+  contents: write   # needed to create a Release and upload the exe to it
 
 jobs:
   build:
@@ -34,8 +37,20 @@ jobs:
       - name: Build Windows installer (.exe)
         run: npm run dist
 
-      - name: Upload built .exe as artifact
+      # Keep the workflow-run Artifact too, useful for quick debugging
+      - name: Upload built .exe as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: origin-core-windows-installer
           path: windows-app/dist/*.exe
+
+      # Publish a GitHub Release with the exe attached, so it appears
+      # under the repo's /releases page.
+      - name: Create GitHub Release with the .exe attached
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: app-v${{ github.run_number }}
+          name: Origin-Core Desktop v${{ github.run_number }}
+          files: windows-app/dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

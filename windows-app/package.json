@@ -1,0 +1,37 @@
+{
+  "name": "origin-core-app",
+  "productName": "Origin-Core",
+  "version": "1.0.0",
+  "description": "Origin-Core desktop app — V2Ray, Steam services, achievements and game sales.",
+  "main": "main.js",
+  "author": "Origin-Core",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.origincore.app",
+    "productName": "Origin-Core",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*"
+    ],
+    "win": {
+      "target": ["nsis"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

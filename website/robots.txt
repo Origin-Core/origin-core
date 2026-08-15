@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://origin-core.github.io/origin-core/website/sitemap.xml
